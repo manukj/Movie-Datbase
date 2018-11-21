@@ -1,0 +1,88 @@
+create trigger update_tv_mv_view
+after insert on watchlist
+for each row
+begin
+
+DECLARE t_tv int;
+DECLARE t_mv int;
+Declare tot_view int;
+
+
+if NEW.tv_mv_id LIKE 'M%'then
+
+set @tot_view = (select tot_v from movie_details where id = NEW.tv_mv_id);
+update movie_details set tot_v = @tot_view + 1 where id = new.tv_mv_id;
+end if;
+
+
+if NEW.tv_mv_id LIKE 'T%'then
+set @tot_view = (select tot_v from tvshow_details where id = NEW.tv_mv_id);
+update tvshow_details set tot_v = @tot_view + 1 where id = new.tv_mv_id;
+end if;
+
+end
+
+
+
+
+
+...........................
+
+
+
+
+
+.....................
+
+
+
+create procedure update_recomendation()
+begin
+
+
+DECLARE mv_id varchar(20);
+DECLARE tv_id varchar(20);
+DECLARE mv_i int;
+DECLARE mv_cur CURSOR FOR select id from movie_details order by tot_v DESC;
+DECLARE tv_cur CURSOR FOR select id from tvshow_details order by tot_v DESC;
+
+set mv_i = 1;
+delete from recommendation;
+
+open mv_cur;
+
+readmv: loop
+fetch mv_cur into mv_id;
+if mv_i = 6 then
+LEAVE readmv;
+end if;
+insert into recommendation values(mv_id);
+set mv_i = mv_i + 1;
+end loop ;
+close mv_cur;
+
+set mv_i = 1;
+open tv_cur;
+
+readmv: loop
+fetch tv_cur into tv_id;
+if mv_i = 6 then
+LEAVE readmv;
+end if;
+insert into recommendation values(tv_id);
+set mv_i = mv_i + 1;
+end loop ;
+close tv_cur;
+
+
+
+end;
+
+
+
+
+
+
+
+
+
