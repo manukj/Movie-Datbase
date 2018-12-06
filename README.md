@@ -1,4 +1,4 @@
-# Movie-Datbase
+# Movie-TvShow Datbase
 movie and Tvshow database is to demonstarate the show how to Connect Database with FrontEnd
 Frontend - HTML + CSS and JSP
 Backend - Mysql
